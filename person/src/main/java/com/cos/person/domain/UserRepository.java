@@ -29,7 +29,6 @@ public class UserRepository {
 	}
 	
 	public void update(int id, UpdateReqDto updateReqDto) {
-		throw new IllegalArgumentException("wrong arguments");
-		//System.out.println("DB에 update하기");
+		System.out.println("DB에 update하기");
 	}
 }

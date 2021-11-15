@@ -1,9 +1,15 @@
 package com.cos.person.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +57,19 @@ public class UserController {
 	// x-www-form-urlencoded => request.getParameter()
 	// text/plain => @RequestBody 어노테이션으로 받을 수 있음
 	// application/json => @RequestBody + 오브젝트로 받아야함
-	public ResponseDto<String> save(@RequestBody JoinReqDto dto) {
+	public ResponseDto<?> save(@Valid @RequestBody JoinReqDto dto, BindingResult bindingResult) {//dto를 통해 들어온 값 중에 문제가있는 것을 bindingResult에 담아줌
+		//ResponseDto<?> 내가 응답할 때 리턴타입을 정함
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap= new HashMap<>();
+			
+			for(FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				//getField에 키값, getDefaultMessage에 메시지
+			}
+			
+			return new ResponseDto<>(HttpStatus.BAD_REQUEST.value(), errorMap);
+		}
+		
 		System.out.println("save()");
 		System.out.println("user : " + dto);
 		userRepository.save(dto);
@@ -74,7 +92,20 @@ public class UserController {
 	
 	// http://localhost:8080/user/1
 	@PutMapping("/user/{id}")
-	public ResponseDto<String> update(@PathVariable int id, @RequestBody UpdateReqDto dto) {
+	public ResponseDto<?> update(@PathVariable int id, @Valid @RequestBody UpdateReqDto dto, BindingResult bindingResult) {
+		
+		System.out.println("bindingResult = " + bindingResult.getErrorCount());
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errorMap= new HashMap<>();
+			
+			for(FieldError error : bindingResult.getFieldErrors()) {
+				errorMap.put(error.getField(), error.getDefaultMessage());
+				//getField에 키값, getDefaultMessage에 메시지
+			}
+			
+			return new ResponseDto<>(HttpStatus.BAD_REQUEST.value(), errorMap);
+		}
+		
 		System.out.println("update()");
 		
 		userRepository.update(id, dto);
