@@ -59,16 +59,6 @@ public class UserController {
 	// application/json => @RequestBody + 오브젝트로 받아야함
 	public ResponseDto<?> save(@Valid @RequestBody JoinReqDto dto, BindingResult bindingResult) {//dto를 통해 들어온 값 중에 문제가있는 것을 bindingResult에 담아줌
 		//ResponseDto<?> 내가 응답할 때 리턴타입을 정함
-		if (bindingResult.hasErrors()) {
-			Map<String, String> errorMap= new HashMap<>();
-			
-			for(FieldError error : bindingResult.getFieldErrors()) {
-				errorMap.put(error.getField(), error.getDefaultMessage());
-				//getField에 키값, getDefaultMessage에 메시지
-			}
-			
-			return new ResponseDto<>(HttpStatus.BAD_REQUEST.value(), errorMap);
-		}
 		
 		System.out.println("save()");
 		System.out.println("user : " + dto);
@@ -95,16 +85,6 @@ public class UserController {
 	public ResponseDto<?> update(@PathVariable int id, @Valid @RequestBody UpdateReqDto dto, BindingResult bindingResult) {
 		
 		System.out.println("bindingResult = " + bindingResult.getErrorCount());
-		if (bindingResult.hasErrors()) {
-			Map<String, String> errorMap= new HashMap<>();
-			
-			for(FieldError error : bindingResult.getFieldErrors()) {
-				errorMap.put(error.getField(), error.getDefaultMessage());
-				//getField에 키값, getDefaultMessage에 메시지
-			}
-			
-			return new ResponseDto<>(HttpStatus.BAD_REQUEST.value(), errorMap);
-		}
 		
 		System.out.println("update()");
 		
