@@ -21,6 +21,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.cos.person.domain.ResponseDto;
 
+import io.sentry.Sentry;
+
 // dispatcher : @Controller, @RestController, @Component, @Configuration
 // Component : Controller가 뜨고 난 뒤에 뜸
 // Configuration : Controller가 뜨기 전(진입전에 어떤것을 설정할 때)
@@ -71,7 +73,9 @@ public class BindingAdvice {
 					for(FieldError error : bindingResult.getFieldErrors()) {
 						errorMap.put(error.getField(), error.getDefaultMessage());
 						// 로그 레벨 error, warn, info, debug (info로 설정하면 error, warn, info만뜸)
+						log.warn(type+"."+method+"() => 필드 : " + error.getField() + ", 메시지 : " + error.getDefaultMessage());
 						log.debug(type+"."+method+"() => 필드 : " + error.getField() + ", 메시지 : " + error.getDefaultMessage());
+						Sentry.captureMessage(type+"."+method+"() => 필드 : " + error.getField() + ", 메시지 : " + error.getDefaultMessage());
 						//getField에 키값, getDefaultMessage에 메시지
 					}
 					

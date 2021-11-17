@@ -23,11 +23,11 @@
         </rollingPolicy>
     </appender>
 
-	<root level="INFO">
-    	<appender-ref ref="STDOUT" />
+	<root level="DEBUG">
+    	<appender-ref ref="STDOUT" /><!-- 모든 프로젝트 폴더에서 info레벨 이상이면 콘솔에 뿌림 -->
     </root>
     
-    <logger name="com.cos.blog.aop.warn" level="WARN">
+    <logger name="com.cos.person.config" level="WARN"><!-- 이 폴더에서 발생하는 warning이상 레벨은 파일에 기록 -->
         <appender-ref ref="FILE" />
     </logger>
 
